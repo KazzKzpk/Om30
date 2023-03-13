@@ -1,66 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Contato
+#### Gabriel Morgado
+#### kazzxd1@gmail.com
+#### (11) 97723-5000
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## Configuração
+Não é necessário configurar.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Subindo o projeto
+Necessário apenas subir os containers no docker.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+`docker-compose up -d --build`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Acesso a linha de comando.
 
-## Learning Laravel
+`docker-compose exec app bash`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Instalar dependências do Laravel.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+`composer install`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Containers
+### PHP
+Rodando a versão 8.1-fpm.
 
-## Laravel Sponsors
+Adicionais:
+- Composer
+- Redis
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### NGINX
 
-### Premium Partners
+### Postgress
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### PGAdmin
+Rodando a PGAdmin versão 4 web para acesso ao banco de dados Postgress.
 
-## Contributing
+### Redis
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Rodando o projeto
 
-## Code of Conduct
+Necessário apenas fazer a migration, acessando a linha de comando.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+`php artisan migrate`
 
-## Security Vulnerabilities
+# Resumo
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Criado CRUD para cadastro de usuários e endereços.
 
-## License
+Tabela de usuários e endereços são separadas, sendo montadas nas respostas de API (excesso acesso direto a API de endereço).
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Existe um sistema de cache de endereços (Redis), utilizando a API de CEP.
+
+## Detalhes
+### Geral
+#### Providers/AppServiceProvider:
+- Adicionado a função **onlyNumbers** (retorna apenas numeros), extendendo a classe Str.
+- Adicionado a função **matchCode** (retorna string em minúsculo, ASCII e remove espaços/hífens), extendendo a classe Str.
+- Adicionado a validação **cpf** (valida inputs nativos do tipo CPF), extendendo a classe Validator.
+- Adicionado a validação **cns** (valida inputs nativos do tipo CNS), extendendo a classe Validator.
+
+#### Exceptions/Handler
+- Adicionado hook de render para retornos em **api/*** retornar json's com status **500**, em vez do padrão **404**.
+
+#### Routes/API
+- Rotas de usuário utilizando resource.
+- Rotas de endereço utilizando get.
+- Rotas de endereço de usuário utilizando resource.
+
+### Models
+#### User
+- Adicionado a função (não estática) **updateMatchCode**, que atualiza o matchcode de um usuário diretamente na model.
+- Adicionado a função **find**, retornando usuário.
+- Adicionado a função **getPaginated**, retornando usuários paginados.
+- Adicionado a função **getByCPF**, retornando usuário pela pesquisa por CPF.
+- Adicionado a função **getByCNS**, retornando usuário pela pesquisa por CNS.
+- Adicionado a função **isRegisteredCPF**, retornando validação do CPF já ter sido registrado em outro usuário.
+- Adicionado a função **isRegisteredCNS**, retornando validação do CNS já ter sido registrado em outro usuário.
+- Adicionado a função **getByMatchCode**, retornando usuário pela pesquisa por nome (utilizando matchcode com wildcard, sendo possível pesquisa por pedaços do nome).
+
+#### UserAddress
+
+### API
+
+Arquivo **insomnia.json** na pasta root do projeto.
+
+#### Usuário
+- Função **index**, **endpoint localhost/user (get)**, retorna usuários paginados.
+- Função **store**, endpoint **localhost/user (post)**, enviando parâmetros, cria e retorna usuário.
+- Função **search**, endpoint **localhost/user (get)**, enviando parâmetros, retorna usuário pesquisado (CPF/CNS/MatchCode).
+- Função **show**, endpoint **local/user/{id} (get)**, retorna usuário pelo id.
+- Função **update**, endpoint **local/user/{id} (patch)**, enviando parâmetros, atualiza e retorna usuário pelo id.
+- Função **destroy**, endpoint **local/user/{id} (delete)**, deleta (soft delete) usuário.
+
+#### Endereço
+- Função **show**, endpoint **local/user/{id} (get)**, enviando parâmetros, retorna endereço pesquisado (CPF).
+
+#### Usuário/Endereço
+- Função **store**, endpoint **localhost/user/address (post)**, enviando parâmetros, cria e retorna endereço.
+- Função **update**, endpoint **local/user/address/{id} (patch)**, enviando parâmetros, atualiza e retorna endereço pelo id.
+
+## Importação de usuários
+
+Para importar usuários, é necessário disparar o Job pelo comando:
+
+`php artisan app:user-import import.csv --name=1 --name_mother=2 --birth=3 --cpf=5 --cns=7 --cep=11 --number=12 --number_ex=13 --now=true`
+
+O primeiro parâmetro (**import.csv**) é o nome do arquivo.
+
+Os próximos parâmetros (opções), são referentes a qual **coluna do CSV** tem o determinado dado.
+Imaginando que os CSV's nem sempre contem somente os dados a serem importados, é possível selecionar qual coluna é responsável por cada dado.
+
+O último parâmetro (opção **-now**) é referente a execução, se o parâmetro for valor true, o comando irá executar diretamente a importação, sem jogar na Queue.
+
+Para executar na Queue:
+
+`php artisan queue:work`
+
+`php artisan app:user-import import.csv --name=1 --name_mother=2 --birth=3 --cpf=5 --cns=7 --cep=11 --number=12 --number_ex=13`
+
+#### Detalhes
+- A importação executa as mesmas funções dos controladores.
+- Todas validações e retornos de API funcionam, mesmo dentro de uma Job/Commando.
+- Em vez de retornos em JSON, será impresso em texto na linha de comando.
+
+Obrigado! :)
