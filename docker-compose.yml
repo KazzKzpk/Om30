@@ -1,0 +1,76 @@
+version: "3.7"
+
+services:
+    # Laravel
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - redis
+        networks:
+            - laravel
+
+    # NGINX
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/:/etc/nginx/conf.d/
+        networks:
+            - laravel
+
+    # Postgres
+    postgres:
+        image: postgres:latest
+        environment:
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+        ports:
+            - "5432:5432"
+        networks:
+            - laravel
+
+    # Postgres Admin
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "root@admin.com"
+            PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - "8080:80"
+        depends_on:
+            - postgres
+        networks:
+            - laravel
+
+    # Redis
+    redis:
+        image: redis:latest
+        networks:
+            - laravel
+
+    # Queue
+    #queue:
+    #    image: especializati/laravel9-app
+    #    restart: unless-stopped
+    #    command: "php artisan queue:work"
+    #    volumes:
+    #        - ./:/var/www
+    #    depends_on:
+    #        - redis
+    #        - app
+    #    networks:
+    #        - laravel
+
+networks:
+    laravel:
+        driver: bridge
