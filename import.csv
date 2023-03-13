@@ -1,0 +1,16 @@
+Fulano da Silva #1; Beltrana da Silva; 1991-02-07; Dummy #1; 626.814.790-10; Dummy #2; 268152530190004; Dummy #3; Dummy #4; Dummy #5; 02311-010; 622;
+Fulano da Silva #2; Beltrana da Silva; 1991-02-07; Dummy #1; 050.064.320-20; Dummy #2; 782416973840006; Dummy #3; Dummy #4; Dummy #5; 02311-010; 623;
+Fulano da Silva #3; Beltrana da Silva; 1991-02-07; Dummy #1; 927.532.410-74; Dummy #2; 299225072970000; Dummy #3; Dummy #4; Dummy #5; 02311-010; 624; Casa 1;
+Fulano da Silva #4; Beltrana da Silva; 1991-02-07; Dummy #1; 436.737.030-56; Dummy #2; 754027621670006; Dummy #3; Dummy #4; Dummy #5; 02311-010; 625;
+Fulano da Silva #5; Beltrana da Silva; 1991-02-07; Dummy #1; 720.915.910-09; Dummy #2; 290858948900006; Dummy #3; Dummy #4; Dummy #5; 02311-010; 626; Casa 2;
+Fulano da Silva #6; Beltrana da Silva; 1991-02-07; Dummy #1; 080.057.820-12; Dummy #2; 108603830180000; Dummy #3; Dummy #4; Dummy #5; 02311-010; 627; Bloco 8 - Apt 85;
+Fulano da Silva #7; Beltrana da Silva; 1991-02-07; Dummy #1; 787.604.850-19; Dummy #2; 863123545850003; Dummy #3; Dummy #4; Dummy #5; 02311-010; 628;
+Fulano da Silva #8; Beltrana da Silva; 1991-02-07; Dummy #1; 081.261.390-21; Dummy #2; 223713307270007; Dummy #3; Dummy #4; Dummy #5; 02311-010; 629;
+Fulano da Silva #9; Beltrana da Silva; 1991-02-07; Dummy #1; 220.999.700-33; Dummy #2; 761078625640008; Dummy #3; Dummy #4; Dummy #5; 02311-010; 630; Casa 3;
+(falha linha);
+Fulano da Silva (falha cpf duplicado);        Beltrana da Silva; 1991-02-07; Dummy #1; 626.814.790-10; Dummy #2; 884392752710002; Dummy #3; Dummy #4; Dummy #5; 02311-010; 622;
+Fulano da Silva (falha cpf invalido);         Beltrana da Silva; 1991-02-07; Dummy #1; 000.000.000-00; Dummy #2; 904047061990007; Dummy #3; Dummy #4; Dummy #5; 02311-010; 622;
+Fulano da Silva (falha cns invalido);         Beltrana da Silva; 1991-02-07; Dummy #1; 166.129.810-91; Dummy #2; 000000000000000; Dummy #3; Dummy #4; Dummy #5; 02311-010; 622;
+Fulano da Silva (falha nascimento invalido);  Beltrana da Silva; 2050-01-01; Dummy #1; 492.168.780-37; Dummy #2; 778344624800018; Dummy #3; Dummy #4; Dummy #5; 02311-010; 622;
+Fulano da Silva (falha parcial cep);          Beltrana da Silva; 1991-02-07; Dummy #1; 515.321.150-91; Dummy #2; 952315469710006; Dummy #3; Dummy #4; Dummy #5; 00000-000; 000;
+Fulano da Silva (falha faltando dados);       Beltrana da Silva;
