@@ -2,7 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Models\UserAddress;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -43,6 +48,25 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        // Update 404 status to 400 (api's)
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                if ($e->getPrevious() instanceof ModelNotFoundException) {
+                    $modelNotFound = $e->getPrevious();
+                    if ($modelNotFound->getModel() === User::class) {
+                        return response()->json([
+                            'error' => 'User not found.'
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
+                    elseif ($modelNotFound->getModel() === UserAddress::class) {
+                        return response()->json([
+                            'error' => 'Address not found.'
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
+                }
+            }
         });
     }
 }
