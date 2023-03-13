@@ -2,43 +2,47 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
-        'email',
-        'password',
+        'name_matchcode',
+        'name_mother',
+        'birth',
+        'cpf',
+        'cns'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public function address()
+    { return $this->hasOne(UserAddress::class); }
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function updateMatchCode()
+    { $this->name_matchcode = Str::matchCode($this->name); }
+
+    public static function find(int $id)
+    { return self::with('address')->where('id', $id)->get(); }
+
+    public static function getPaginated(int $count = 10)
+    { return self::with('address')->latest()->paginate($count); }
+
+    public static function getByCPF(string $cpf)
+    { return self::with('address')->where('cpf', $cpf)->get(); }
+
+    public static function getByCNS(string $cns)
+    { return self::with('address')->where('cns', $cns)->get(); }
+
+    public static function isRegisteredCPF(string $cpf)
+    { return (count(self::getByCPF($cpf)->toArray()) > 0); }
+
+    public static function isRegisteredCNS(string $cns)
+    { return (count(self::getByCNS($cns)->toArray()) > 0); }
+
+    public static function getByMatchCode(string $matchCode)
+    { return self::with('address')->where('name_matchcode', 'like', '%' . Str::matchCode($matchCode) . '%')->get(); }
 }
